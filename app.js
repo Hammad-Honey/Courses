@@ -7,11 +7,15 @@ app.use(cors(
     //     methods: ['GET','POST']
     // }
 ));
+// ====== Importing Database
+const DB = require('./Database/connection');
+DB();
 
-// =============== Routes Importing =======================
+
+// ====== Routes Importing
 const courses=require('./routes/courses');
 
-// ============== Imorting Cutom Middleware ===============
+// ====== Imorting Cutom Middleware
 const logger=require('./middlewares/logger');
 
 // ================ Builtin Middleware ==================== // Global Middleware

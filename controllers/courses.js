@@ -1,16 +1,18 @@
+const Courses=require("../models/courses")
 
 
-let courses = [
-    { id: 1, name: 'course1' },
-    { id: 2, name: 'course2' },
-    { id: 3, name: 'course3' },
-    { id: 4, name: 'course4' },
-    { id: 5, name: 'course5' },
-]
 
 
-const getAllCourses = (req, res) => {
-    res.send(courses)
+
+const getAllCourses =async (req, res) => {
+    try{
+        const courses = await Courses.find();
+        res.status(200).json(courses)
+
+    }
+    catch(error){
+        res.status(400).json({error: error.message})
+    }
 }
 
 

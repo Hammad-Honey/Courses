@@ -1,7 +1,14 @@
-import mongoose from "mongoose";
-const {schema}=mongoose;
+const mongoose=require("mongoose");
+const {Schema, model}=mongoose;
 
-const courses=new schema({
+const courseSchema=new Schema({
     id:Number,
-    title:String,
+    title:{
+        type:String,
+        required:true,
+        minlength:3
+     },
 })
+
+
+module.exports=model("Courses", courseSchema);
