@@ -7,7 +7,13 @@ app.use(cors(
     //     methods: ['GET','POST']
     // }
 ));
+
+
+
+// ================ Builtin Middleware ====================
 app.use(express.json());
+app.use(express.urlencoded({extended:true}));   // This URL encoded will convert form sumbission to json
+app.use(express.static('static'))  //This will server Static files domain.com/file_Name.ext
 
 
 
