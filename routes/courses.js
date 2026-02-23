@@ -1,29 +1,12 @@
 const express= require('express');
 const router=express.Router;
+const controller=require('../controllers/courses.js');
 
 
-// ======================================= Random Data ===================================
-let courses = [
-    { id: 1, name: 'course1' },
-    { id: 2, name: 'course2' },
-    { id: 3, name: 'course3' },
-    { id: 4, name: 'course4' },
-    { id: 5, name: 'course5' },
-]
 
 
-// ========================================= Routes ======================================
-
-router.get('/', (req, res) => {
-    res.send(courses)
-});
-
-// =============== Get Single Course ==============
-router.get('/:id', (req, res) => {
-    const course = courses.find(parm => parm.id === parseInt(req.params.id))
-    if (!course) return res.status(404).send('Error 404 Page Not Found');
-    res.status(200).send(course);
-});
+router.get('/', controller.getAllCourses);
+router.get('/:id', controller.getCoursebyid);
 
 // ============= Adding  a New Cousrse ==============
 router.post('/', (req, res) => {

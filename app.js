@@ -12,7 +12,7 @@ app.use(cors(
 const courses=require('./routes/courses');
 
 // ============== Imorting Cutom Middleware ===============
-const logger=require('./middleware/logger');
+const logger=require('./middlewares/logger');
 
 // ================ Builtin Middleware ==================== // Global Middleware
 app.use(express.json());
