@@ -11,12 +11,15 @@ app.use(cors(
 // =============== Routes Importing =======================
 const courses=require('./routes/courses');
 
+// ============== Imorting Cutom Middleware ===============
+const logger=require('./middleware/logger');
 
-
-// ================ Builtin Middleware ====================
+// ================ Builtin Middleware ==================== // Global Middleware
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));   // This URL encoded will convert form sumbission to json
-app.use(express.static('static'))  //This will server Static files domain.com/file_Name.ext
+app.use(express.static('static'))  //This will server Static files domain.com/file_Name.ext add option like __dirname
+app.use(logger)
+
 
 
 
