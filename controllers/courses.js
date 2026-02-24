@@ -1,71 +1,73 @@
-const Courses=require("../models/courses")
+const Courses = require("../models/courses")
 
 
 
 
 
-const getAllCourses =async (req, res) => {
-    try{
+const getAllCourses = async (req, res) => {
+    try {
         const courses = await Courses.find();
         res.status(200).json(courses)
 
     }
-    catch(error){
-        res.status(400).json({error: error.message})
+    catch (error) {
+        res.status(400).json({ error: error.message })
     }
 }
 
 
-const getCoursebyid = (req, res) => {
-    const course = courses.find(parm => parm.id === parseInt(req.params.id))
-    if (!course) return res.status(404).send('Error 404 Page Not Found');
-    res.status(200).send(course);
-
-}
-
-const postaCourse = (req, res) => {
-    if (!req.body.name || req.body.name.length < 3) {
-        res.status(400).send(`Name is Required and should not be less than 3 characters`)
-    }
-    else {
-        console.log(req.body);
-        const course = {
-            id: courses.length + 1,
-            name: req.body.name
-
-        }
-        courses.push(course);
-        res.status(201).send(course);
-    }
-}
-
-const updateCourse = (req, res) => {
-    const course = courses.find(course => (course.id === parseInt(req.params.id)));  // Saving the Course object to modify
-    console.log(course)
-    if (course && typeof (req.body.name) === 'string' && req.body.name.length > 3)   // check if the course id exist
-    {
-        course.name = req.body.name;
-        console.log("Course Updated + " + req.body.name)
+const getCoursebyid = async (req, res) => {
+    try {
+        const courses = await Courses.find({ id: req.params.id })
         res.status(200).json(courses)
     }
-    else {
-        res.status(400).send("Data Put failed");
-        console.log("Data Put failed");
+    catch (error) {
+        res.status(400).json({ error: error.message })
     }
 
 }
 
-const deleteCourse = (req,res)=>{
+const postaCourse = async (req, res) => {
+    //Using Aggregate Function to Get Max value from previous
+    try {
+        const result1 = await Courses.aggregate([{ $group: { _id: null, maxvalue: { $max: "$id" } } }])          // This will return a array with a [{index 0}]
+        console.log("result1", result1);
+        const maxid = result1.length > 0 ? result1[0].maxvalue : 0;
+        const course = await Courses.insertOne({ id: maxid + 1, name: req.body.name});
+        return res.status(200).json({ id: maxid + 1, name: req.body.name})
+
+    } catch (error) {
+        console.error("Error Occured", error);
+        res.status(400).json(error.message);
+
+    }
+
+}
+
+
+const updateCourse = async (req, res) => {
+    try{
+        const ifavaliable=await Courses.find({id: req.params.id})
+        console.log(ifavaliable);
+        if(ifavaliable)
+        await Courses.updateOne({id:req.params.id}, {$set: {name:req.body.name}})
+        res.status(200).send("Sucessfully Updated")
+    }
+    catch(error){
+        res.status(400).json(error.message);
+    }
+}
+
+const deleteCourse = (req, res) => {
     const course = courses.find(course => (course.id === parseInt(req.params.id))); // For Coures objec ref. in the memory
-    if(course)
-    {// To Delte We need to get index of the course in the array
-        const indexofcourse=courses.findIndex(coursIndex=> coursIndex.id===parseInt(req.params.id) );
+    if (course) {// To Delte We need to get index of the course in the array
+        const indexofcourse = courses.findIndex(coursIndex => coursIndex.id === parseInt(req.params.id));
         console.log(indexofcourse)
         console.log("Index of the Course being Delted");
-        courses.splice(indexofcourse,1);
+        courses.splice(indexofcourse, 1);
         res.status(200).send(courses);
     }
-    else{
+    else {
         console.log('Did not find the course you mentioned');
         res.status(400).send("Unale to delete not existed items");
     }

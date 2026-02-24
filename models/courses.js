@@ -3,7 +3,7 @@ const {Schema, model}=mongoose;
 
 const courseSchema=new Schema({
     id:Number,
-    title:{
+    name:{
         type:String,
         required:true,
         minlength:3
